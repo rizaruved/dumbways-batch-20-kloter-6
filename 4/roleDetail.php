@@ -2,15 +2,6 @@
 
     include('config/dbConfig.php');
 
-    // if(isset($_GET['role_id'])){
-    //   $id = $_GET['role_id'];
-    //   $sql = "SELECT * FROM `hero` AS h INNER JOIN `role` AS r ON h.id_role = r.role_id WHERE id = $id";
-    //   $result = mysqli_query($conn, $sql);
-    //   $heroes = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    //   mysqli_free_result($result);
-    //   mysqli_close($conn);
-    // }
-
     $id = $_GET['role_id'];
     //Query untuk semua item di table heroes_tb
     $sql = "SELECT * FROM `hero` AS h INNER JOIN `role` AS r ON h.id_role = r.role_id WHERE id_role = ('$id')";
