@@ -45,7 +45,7 @@
           <a href="details.php?id=<?php echo $hero['id']?>"><img class="card-img-top" src="<?php echo ($hero['image']);?>" style="height:400px"></a>
           <div class="card-body">
             <a href="details.php?id=<?php echo $hero['id']?>"><h4 class="card-title"><?php echo ($hero['name']);?></h4></a>
-            <a href="roleDetail.php?id=<?php echo $hero['role_id']?>"><h6 class="card-subtitle mb-2 text-muted"><?php echo ($hero['role_name']);?></h6></a>
+            <a href="roleDetail.php?role_id=<?php echo $hero['role_id']?>"><h6 class="card-subtitle mb-2 text-muted"><?php echo ($hero['role_name']);?></h6></a>
             <a href="details.php?id=<?php echo $hero['id']?>" class="btn btn-primary btn-block">Selengkapnya...</a>
           </div>
         </div>
