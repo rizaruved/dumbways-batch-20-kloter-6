@@ -1,26 +1,19 @@
 <?php
 
-  include('config/dbConfig.php');
+include('config/dbConfig.php');
 
+// MENDAPATKAN ID POST YANG INGIN DIEDIT
+if(isset($_GET['id'])){
     $id = $_GET['id'];
-    //Query untuk semua item di table heroes_tb
-    $sql = "SELECT * FROM `hero` AS h INNER JOIN `role` AS r ON h.id_role = r.role_id WHERE h.id = $id";
-    $sql2 = "SELECT * FROM role";
-
-    //Membuat query dan menyimpan hasilnya dalam variabel result
+    $sql = "SELECT * FROM `hero` AS h INNER JOIN `role` AS r ON h.id_role = r.role_id WHERE id = $id;";
+    // $sql .= "SELECT * FROM 'role'";
+    
     $result = mysqli_query($conn, $sql);
-    $result2 = mysqli_query($conn, $sql2);
-
-    //Fetch hasil query sebagai associative array
-    $heroes = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    $heroes2 = mysqli_fetch_all($result2, MYSQLI_ASSOC);
-
-    //Free Memory
+    $heroes = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
-    mysqli_free_result($result2);
-
-    //Menutup koneksi
     mysqli_close($conn);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -30,14 +23,18 @@
 <?php include('includes/header.php'); ?>
 
   <div class="container my-5">
-    <!-- FORM TAMBAH HERO -->
-    <form action="edit.php" method="POST" enctype="multipart/form-data">
+    <!-- FORM EDIT HERO -->
+    <form action="editAction.php" method="POST" enctype="multipart/form-data">
       
       <h3>Edit Hero</h3>
+    
+      <!-- ID HERO HIDDEN -->
+      <input type="hidden" name="id" value="<?php echo $heroes['id']; ?>">
+
       <!-- INPUT NAMA HERO -->
       <div class="form-group">
         <label for="nama">Nama Hero:</label>
-        <input type="text" class="form-control" name="name" placeholder="<?php foreach($heroes as $hero1): echo $hero1['name']; endforeach; ?>">
+        <input type="text" class="form-control" name="name" value="<?php echo $heroes['name']; ?>">
       </div>
       
       <!-- SELECT ROLE HERO -->
@@ -46,43 +43,33 @@
         <label class="my-1 mr-2" for="role_id">Role Hero: </label>
         <!-- Role Selection -->
         <select class="custom-select my-1 mr-sm-2" name='role_id'>
-          <option selected><?php foreach($heroes as $hero1): echo $hero1['role_name']; endforeach; ?></option>
-          <?php foreach($heroes2 as $hero): ?>
-            <option value="<?php echo $hero['role_id'] ?>"><?php echo $hero['role_name'] ?></option>
-          <?php endforeach; ?>
+          <option selected>Role...</option>
+            <option value="1">Assassin</option>
+            <option value="2">Fighter</option>
+            <option value="3">Mage</option>
+            <option value="4">Marksman</option>
+            <option value="5">Support</option>
+            <option value="6">Tank</option>
         </select>
       </div>
 
       <!-- DESKRIPSI HERO -->
       <div class="form-group">
         <label for="description">Deskripsi Hero:</label>
-        <textarea class="form-control" rows="3" name="description" placeholder="<?php foreach($heroes as $hero1): echo $hero1['description']; endforeach; ?>"></textarea>
+        <textarea class="form-control" rows="3" name="description"><?php echo $heroes['description']; ?></textarea>
       </div>
-
-      <br>
+      
+      <!-- UPLOAD GAMBAR HERO -->
+      <div class="form-group">
+        <label for="image">Gambar Hero:</label>
+        <input type="file" class="form-control-file" name="image">
+        <br>
+        <p>*Accepted file type: .jpg .jpeg .png .gif .webp</p>
+      </div>
       
       <button type="submit" name="submit" value="submit" class="btn btn-primary mb-2">Submit</button>
+
     </form>
-
-    <?php 
-      //SUBMIT
-      if(isset($_POST['submit'])) {
-        $name = $_POST['name'];
-        $role_id = $_POST['role_id'];
-        $description = $_POST['description'];
-
-        $sql = "UPDATE hero SET name='$name', id_role='$role_id', description='$description' WHERE id = $id";
-
-        //Menginput data form ke Database
-        if(mysqli_query($conn, $sql)){
-            //Berhasil
-            header('Location: index.php');
-        //Gagal
-        }else{
-            echo 'Query error: ' . mysqli_error($conn);
-        }
-      }
-    ?>
 
   </div>
 
